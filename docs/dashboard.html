@@ -387,7 +387,7 @@ const chartRam = new Chart(document.getElementById('chartRam'), {
       borderColor: '#ffb347',
       backgroundColor: 'rgba(255,179,71,0.1)',
       borderWidth: 2, tension: 0.2,
-      pointStyle:           ramGB.map((v, i) => (recFlag[i] && v != null) ? 'star' : 'circle'),
+      pointStyle:           ramGB.map((v, i) => (recFlag[i] && v != null) ? 'circle' : 'circle'),
       pointRadius:          ramGB.map((v, i) => (recFlag[i] && v != null) ? 7 : 2),
       pointBackgroundColor: ramGB.map((v, i) => (recFlag[i] && v != null) ? '#ff6050' : '#ffb347'),
       pointBorderColor:     ramGB.map((v, i) => (recFlag[i] && v != null) ? 'rgba(255,96,80,0.4)' : 'transparent'),
@@ -413,7 +413,7 @@ function makeDataset(label, data, color, hidden=false) {
     borderWidth: 2, tension: 0.25,
     hidden,
     _seriesKey: label.toLowerCase().split(' ')[0],
-    pointStyle:           data.map((v, i) => (recFlag[i] && v != null) ? 'star' : 'circle'),
+    pointStyle:           data.map((v, i) => (recFlag[i] && v != null) ? 'circle' : 'circle'),
     pointRadius:          data.map((v, i) => (recFlag[i] && v != null) ? 7 : 1.5),
     pointBackgroundColor: data.map((v, i) => (recFlag[i] && v != null) ? '#ff6050' : color),
     pointBorderColor:     data.map((v, i) => (recFlag[i] && v != null) ? 'rgba(255,96,80,0.4)' : 'transparent'),
@@ -481,7 +481,7 @@ function applyToggles() {
     chart.options.plugins.annotation.annotations = recOn ? recessionBands() : [];
     chart.data.datasets.forEach(ds => {
       if (recOn) {
-        ds.pointStyle           = ds.data.map((v, i) => (recFlag[i] && v != null) ? 'star' : 'circle');
+        ds.pointStyle           = ds.data.map((v, i) => (recFlag[i] && v != null) ? 'circle' : 'circle');
         ds.pointRadius          = ds.data.map((v, i) => (recFlag[i] && v != null) ? 7 : 1.5);
         ds.pointBackgroundColor = ds.data.map((v, i) => (recFlag[i] && v != null) ? '#ff6050' : ds.borderColor);
         ds.pointBorderColor     = ds.data.map((v, i) => (recFlag[i] && v != null) ? 'rgba(255,96,80,0.4)' : 'transparent');
