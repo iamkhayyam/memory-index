@@ -49,25 +49,6 @@
       box-shadow: 0 0 8px rgba(255,179,71,0.45);
     }
 
-    /* ── HERO CSS ANIMATIONS (no JS dependency) ───── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0);    }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-
-    .anim-badge    { animation: fadeUp  0.55s ease-out 0.05s both; }
-    .anim-h1       { animation: fadeUp  0.7s  ease-out 0.2s  both; }
-    .anim-sub      { animation: fadeUp  0.6s  ease-out 0.35s both; }
-    .anim-meta     { animation: fadeIn  0.5s  ease-out 0.5s  both; }
-    .anim-shields  { animation: fadeUp  0.5s  ease-out 0.6s  both; }
-    .anim-pill-1   { animation: fadeUp  0.45s ease-out 0.7s  both; }
-    .anim-pill-2   { animation: fadeUp  0.45s ease-out 0.78s both; }
-    .anim-pill-3   { animation: fadeUp  0.45s ease-out 0.86s both; }
-    .anim-pill-4   { animation: fadeUp  0.45s ease-out 0.94s both; }
 
     /* ── HERO ─────────────────────────────────────── */
     header {
@@ -394,15 +375,15 @@
 <div id="progress"></div>
 
 <header>
-  <div class="hero-badge anim-badge">Working Paper &middot; April 2026</div>
-  <h1 class="anim-h1">The <em>Ramification</em> Index</h1>
-  <p class="subtitle anim-sub">RAM Prices, Oligopoly Cycles, and the Downstream Consequences of Semiconductor Pricing as an Economic Signal</p>
-  <p class="meta anim-meta">
+  <div class="hero-badge">Working Paper &middot; April 2026</div>
+  <h1>The <em>Ramification</em> Index</h1>
+  <p class="subtitle">RAM Prices, Oligopoly Cycles, and the Downstream Consequences of Semiconductor Pricing as an Economic Signal</p>
+  <p class="meta">
     Khayyam Wakil &nbsp;&middot;&nbsp; The ARC Institute of Knowware &nbsp;&middot;&nbsp; Calgary, AB &nbsp;&middot;&nbsp;
     <a href="mailto:the@knowware.institute">the@knowware.institute</a>
   </p>
 
-  <div class="shield-row anim-shields">
+  <div class="shield-row">
     <a href="https://iamkhayyam.github.io/memory-index/" target="_blank">
       <img src="https://img.shields.io/badge/site-live-brightgreen?style=flat-square&labelColor=20232d" alt="site live">
     </a>
@@ -417,12 +398,12 @@
   </div>
 
   <div class="pill-row">
-    <a class="pill pill-arxiv anim-pill-1" href="view.html?edition=arxiv" target="_blank">⎙&nbsp; arXiv Edition</a>
-    <a class="pill pill-dl   anim-pill-1" href="ramification-arxiv.pdf" download>↓</a>
-    <a class="pill pill-nature anim-pill-2" href="view.html?edition=nature" target="_blank">⎙&nbsp; Journal Edition</a>
-    <a class="pill pill-dl   anim-pill-2" href="ramification-nature.pdf" download>↓</a>
-    <a class="pill pill-github anim-pill-3" href="https://github.com/iamkhayyam/memory-index" target="_blank">⌥&nbsp; GitHub</a>
-    <a class="pill pill-dash  anim-pill-4" href="#dashboard">Dashboard ↓</a>
+    <a class="pill pill-arxiv"  href="view.html?edition=arxiv"   target="_blank">⎙&nbsp; arXiv Edition</a>
+    <a class="pill pill-dl"    href="ramification-arxiv.pdf"    download>↓</a>
+    <a class="pill pill-nature" href="view.html?edition=nature" target="_blank">⎙&nbsp; Journal Edition</a>
+    <a class="pill pill-dl"    href="ramification-nature.pdf"   download>↓</a>
+    <a class="pill pill-github" href="https://github.com/iamkhayyam/memory-index" target="_blank">⌥&nbsp; GitHub</a>
+    <a class="pill pill-dash"  href="#dashboard">Dashboard ↓</a>
   </div>
 </header>
 
