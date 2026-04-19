@@ -49,22 +49,27 @@
     margin: 0 auto;
   }
   .controls {
+    position: sticky;
+    top: 0;
+    z-index: 100;
     display: flex;
     flex-wrap: wrap;
-    gap: 10px 16px;
-    padding: 14px 16px;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 10px;
+    gap: 6px 14px;
+    padding: 10px 40px;
+    background: rgba(11,12,16,0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
     align-items: center;
   }
   .controls label {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-size: 13px;
+    gap: 5px;
+    font-size: 12px;
     color: var(--muted);
     cursor: pointer;
+    white-space: nowrap;
   }
   .controls label input {
     accent-color: var(--ram);
@@ -134,17 +139,17 @@
   </p>
 </header>
 
-<main>
+<div class="controls" id="controls">
+  <strong style="font-size:12px;color:var(--text);margin-right:4px;">Series:</strong>
+  <label><input type="checkbox" data-series="ram" checked><span class="swatch" style="background:var(--ram)"></span> RAM</label>
+  <label><input type="checkbox" data-series="lipstick" checked><span class="swatch" style="background:var(--lipstick)"></span> Lipstick</label>
+  <label><input type="checkbox" data-series="hemline" checked><span class="swatch" style="background:var(--hemline)"></span> Hemline</label>
+  <label><input type="checkbox" data-series="mui" checked><span class="swatch" style="background:var(--mui)"></span> Men's Underwear</label>
+  <label><input type="checkbox" data-series="popcorn" checked><span class="swatch" style="background:var(--popcorn)"></span> Popcorn</label>
+  <label style="margin-left:auto;"><input type="checkbox" id="recessionToggle" checked> Recessions</label>
+</div>
 
-  <div class="controls" id="controls">
-    <strong style="font-size:13px;color:var(--text);margin-right:6px;">Show series:</strong>
-    <label><input type="checkbox" data-series="ram" checked><span class="swatch" style="background:var(--ram)"></span> RAM Index ($/GB)</label>
-    <label><input type="checkbox" data-series="lipstick" checked><span class="swatch" style="background:var(--lipstick)"></span> Lipstick</label>
-    <label><input type="checkbox" data-series="hemline" checked><span class="swatch" style="background:var(--hemline)"></span> Hemline</label>
-    <label><input type="checkbox" data-series="mui" checked><span class="swatch" style="background:var(--mui)"></span> Men's Underwear</label>
-    <label><input type="checkbox" data-series="popcorn" checked><span class="swatch" style="background:var(--popcorn)"></span> Popcorn</label>
-    <label style="margin-left:auto;"><input type="checkbox" id="recessionToggle" checked> NBER recession shading</label>
-  </div>
+<main>
 
   <div class="card">
     <h2>RAM price per GB (log scale, 1980&ndash;2026)</h2>
