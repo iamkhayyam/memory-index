@@ -46,8 +46,28 @@
       transform-origin: left center;
       transform: scaleX(0);
       z-index: 200;
-      box-shadow: 0 0 8px rgba(255,179,71,0.5);
+      box-shadow: 0 0 8px rgba(255,179,71,0.45);
     }
+
+    /* ── HERO CSS ANIMATIONS (no JS dependency) ───── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .anim-badge    { animation: fadeUp  0.55s ease-out 0.05s both; }
+    .anim-h1       { animation: fadeUp  0.7s  ease-out 0.2s  both; }
+    .anim-sub      { animation: fadeUp  0.6s  ease-out 0.35s both; }
+    .anim-meta     { animation: fadeIn  0.5s  ease-out 0.5s  both; }
+    .anim-shields  { animation: fadeUp  0.5s  ease-out 0.6s  both; }
+    .anim-pill-1   { animation: fadeUp  0.45s ease-out 0.7s  both; }
+    .anim-pill-2   { animation: fadeUp  0.45s ease-out 0.78s both; }
+    .anim-pill-3   { animation: fadeUp  0.45s ease-out 0.86s both; }
+    .anim-pill-4   { animation: fadeUp  0.45s ease-out 0.94s both; }
 
     /* ── HERO ─────────────────────────────────────── */
     header {
@@ -59,18 +79,17 @@
       overflow: hidden;
     }
 
-    /* Subtle glow behind title */
     header::before {
       content: '';
       position: absolute;
       top: 30%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 600px; height: 200px;
+      width: 640px; height: 220px;
       background: radial-gradient(ellipse, rgba(255,179,71,0.07) 0%, transparent 70%);
       pointer-events: none;
     }
 
-    .badge {
+    .hero-badge {
       display: inline-block;
       border: 1px solid rgba(255,179,71,0.5);
       color: var(--ram);
@@ -96,26 +115,26 @@
     header h1 em {
       color: var(--ram);
       font-style: normal;
-      text-shadow: 0 0 48px rgba(255,179,71,0.3);
+      text-shadow: 0 0 48px rgba(255,179,71,0.28);
     }
 
     .subtitle {
       color: var(--muted);
       font-size: 0.92rem;
       max-width: 620px;
-      margin: 0 auto 1.6rem;
+      margin: 0 auto 1.4rem;
       line-height: 1.6;
     }
 
     .meta {
       font-size: 0.82rem;
       color: var(--muted);
-      margin-bottom: 2rem;
+      margin-bottom: 1.4rem;
     }
     .meta a { color: var(--mui); text-decoration: none; }
     .meta a:hover { text-decoration: underline; }
 
-    /* ── SHIELDS BADGES ───────────────────────────── */
+    /* ── SHIELD BADGES ────────────────────────────── */
     .shield-row {
       display: flex;
       flex-wrap: wrap;
@@ -125,12 +144,12 @@
     }
     .shield-row img { height: 20px; border-radius: 3px; }
 
-    /* ── PILL BUTTONS ─────────────────────────────── */
+    /* ── PILLS ────────────────────────────────────── */
     .pill-row {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 0.6rem;
+      gap: 0.55rem;
     }
 
     .pill {
@@ -143,17 +162,18 @@
       font-weight: 600;
       text-decoration: none;
       border: 1px solid transparent;
-      transition: opacity 0.15s, box-shadow 0.2s;
-      cursor: pointer;
+      transition: opacity 0.15s, box-shadow 0.2s, background 0.15s;
     }
     .pill:hover { opacity: 0.82; }
 
-    .pill-arxiv  { background: var(--ram); color: #0b0c10; }
-    .pill-arxiv:hover  { box-shadow: 0 0 16px rgba(255,179,71,0.35); }
-    .pill-nature { background: transparent; color: var(--text); border-color: var(--border2); }
-    .pill-github { background: transparent; color: var(--text); border-color: var(--border2); }
-    .pill-dash   { background: transparent; color: var(--ram);  border-color: rgba(255,179,71,0.5); }
-    .pill-dash:hover { background: rgba(255,179,71,0.07); }
+    .pill-arxiv  { background: var(--ram);  color: #0b0c10; }
+    .pill-arxiv:hover  { box-shadow: 0 0 16px rgba(255,179,71,0.35); opacity: 1; }
+    .pill-nature { background: transparent; color: var(--text);  border-color: var(--border2); }
+    .pill-github { background: transparent; color: var(--text);  border-color: var(--border2); }
+    .pill-dl     { background: transparent; color: var(--muted); border-color: var(--border);  font-size: 0.74rem; padding: 0.45em 0.9em; }
+    .pill-dl:hover { border-color: var(--border2); opacity: 1; color: var(--text); }
+    .pill-dash   { background: transparent; color: var(--ram);   border-color: rgba(255,179,71,0.45); }
+    .pill-dash:hover { background: rgba(255,179,71,0.07); opacity: 1; }
 
     /* ── MAIN ─────────────────────────────────────── */
     main {
@@ -203,7 +223,6 @@
       padding: 1.2rem 1rem;
       text-align: center;
       transition: border-color 0.2s, box-shadow 0.2s;
-      cursor: default;
     }
     .stat-card:hover {
       border-color: rgba(255,179,71,0.3);
@@ -295,8 +314,6 @@
     }
 
     /* ── DASHBOARD ────────────────────────────────── */
-    #dashboard { margin-top: 3.2rem; }
-
     .dash-wrap {
       background: var(--panel);
       border: 1px solid var(--border);
@@ -313,11 +330,7 @@
       background: var(--panel2);
     }
 
-    .dash-bar-left {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
+    .dash-bar-left { display: flex; align-items: center; gap: 0.5rem; }
 
     .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
     .dot-ram  { background: var(--ram); }
@@ -326,11 +339,7 @@
     .dot-mui  { background: var(--mui); }
     .dot-pop  { background: var(--popcorn); }
 
-    .dash-label {
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 0.04em;
-    }
+    .dash-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; }
 
     .open-full {
       font-size: 0.75rem;
@@ -382,48 +391,44 @@
 </head>
 <body>
 
-<!-- Scroll progress bar -->
 <div id="progress"></div>
 
 <header>
-  <div class="badge" id="gs-badge">Working Paper &middot; April 2026</div>
-  <h1 id="gs-h1">The <em>Ramification</em> Index</h1>
-  <p class="subtitle" id="gs-sub">RAM Prices, Oligopoly Cycles, and the Downstream Consequences of Semiconductor Pricing as an Economic Signal</p>
-  <p class="meta" id="gs-meta">
-    Khayyam Wakil &nbsp;&middot;&nbsp; Independent researcher &nbsp;&middot;&nbsp;
-    <a href="mailto:theusual@gmail.com">theusual@gmail.com</a>
+  <div class="hero-badge anim-badge">Working Paper &middot; April 2026</div>
+  <h1 class="anim-h1">The <em>Ramification</em> Index</h1>
+  <p class="subtitle anim-sub">RAM Prices, Oligopoly Cycles, and the Downstream Consequences of Semiconductor Pricing as an Economic Signal</p>
+  <p class="meta anim-meta">
+    Khayyam Wakil &nbsp;&middot;&nbsp; The ARC Institute of Knowware &nbsp;&middot;&nbsp; Calgary, AB &nbsp;&middot;&nbsp;
+    <a href="mailto:the@knowware.institute">the@knowware.institute</a>
   </p>
 
-  <!-- Shields.io badges -->
-  <div class="shield-row" id="gs-shields">
-    <img src="https://img.shields.io/badge/site-live-brightgreen?style=flat-square&labelColor=20232d" alt="site live">
+  <div class="shield-row anim-shields">
+    <a href="https://iamkhayyam.github.io/memory-index/" target="_blank">
+      <img src="https://img.shields.io/badge/site-live-brightgreen?style=flat-square&labelColor=20232d" alt="site live">
+    </a>
     <img src="https://img.shields.io/badge/status-working%20paper-orange?style=flat-square&labelColor=20232d" alt="working paper">
-    <img src="https://img.shields.io/github/last-commit/iamkhayyam/memory-index?style=flat-square&labelColor=20232d&color=6ed3ff" alt="last commit">
-    <img src="https://img.shields.io/badge/data-1980–2026-4a7cc7?style=flat-square&labelColor=20232d" alt="data 1980-2026">
-    <img src="https://img.shields.io/badge/license-CC%20BY%204.0-lightgrey?style=flat-square&labelColor=20232d" alt="CC BY 4.0">
+    <a href="https://github.com/iamkhayyam/memory-index/commits/main" target="_blank">
+      <img src="https://img.shields.io/github/last-commit/iamkhayyam/memory-index?style=flat-square&labelColor=20232d&color=6ed3ff" alt="last commit">
+    </a>
+    <img src="https://img.shields.io/badge/data-1980–2026-4a7cc7?style=flat-square&labelColor=20232d" alt="data coverage">
+    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">
+      <img src="https://img.shields.io/badge/license-CC%20BY%204.0-lightgrey?style=flat-square&labelColor=20232d" alt="CC BY 4.0">
+    </a>
   </div>
 
-  <!-- CTA pills -->
   <div class="pill-row">
-    <a class="pill pill-arxiv" href="view.html?edition=arxiv" target="_blank">
-      ⎙&nbsp; arXiv Edition
-    </a>
-    <a class="pill pill-nature" href="view.html?edition=nature" target="_blank">
-      ⎙&nbsp; Journal Edition
-    </a>
-    <a class="pill pill-github" href="https://github.com/iamkhayyam/memory-index" target="_blank">
-      ⌥&nbsp; GitHub
-    </a>
-    <a class="pill pill-dash" href="#dashboard">
-      Dashboard ↓
-    </a>
+    <a class="pill pill-arxiv anim-pill-1" href="view.html?edition=arxiv" target="_blank">⎙&nbsp; arXiv Edition</a>
+    <a class="pill pill-dl   anim-pill-1" href="ramification-arxiv.pdf" download>↓</a>
+    <a class="pill pill-nature anim-pill-2" href="view.html?edition=nature" target="_blank">⎙&nbsp; Journal Edition</a>
+    <a class="pill pill-dl   anim-pill-2" href="ramification-nature.pdf" download>↓</a>
+    <a class="pill pill-github anim-pill-3" href="https://github.com/iamkhayyam/memory-index" target="_blank">⌥&nbsp; GitHub</a>
+    <a class="pill pill-dash  anim-pill-4" href="#dashboard">Dashboard ↓</a>
   </div>
 </header>
 
 <main>
 
-  <!-- ABSTRACT -->
-  <section class="gs-section">
+  <section>
     <h2>Abstract</h2>
     <div class="abstract-box">
       <p>Informal economic indicators — the Lipstick Index, the Hemline Index, the Men's Underwear Index, and the Buttered Popcorn Index — have circulated in financial journalism for nearly a century as heuristic substitutes for orthodox recession signals. Each is built on consumer-demand folk psychology, and each has failed at least once in the past two decades.</p>
@@ -432,8 +437,7 @@
     </div>
   </section>
 
-  <!-- KEY NUMBERS -->
-  <section class="gs-section">
+  <section>
     <h2>Key Results</h2>
     <div class="stats">
       <div class="stat-card"><div class="stat-num">6/6</div><div class="stat-label">NBER recessions correctly signalled since 1980</div></div>
@@ -445,15 +449,12 @@
     </div>
   </section>
 
-  <!-- RECESSION SCORECARD -->
-  <section class="gs-section">
+  <section>
     <h2>Recession Scorecard</h2>
     <div class="table-wrap">
       <table>
         <thead>
-          <tr>
-            <th>Index</th><th>1980–82</th><th>1990–91</th><th>2001</th><th>2008–09</th><th>2020</th><th>Score</th>
-          </tr>
+          <tr><th>Index</th><th>1980–82</th><th>1990–91</th><th>2001</th><th>2008–09</th><th>2020</th><th>Score</th></tr>
         </thead>
         <tbody>
           <tr>
@@ -489,8 +490,7 @@
     </p>
   </section>
 
-  <!-- WHY THE NAME -->
-  <section class="gs-section">
+  <section>
     <h2>Why "Ramification"?</h2>
     <div class="triple-grid">
       <div class="triple-card">
@@ -511,8 +511,7 @@
     </div>
   </section>
 
-  <!-- DASHBOARD -->
-  <section id="dashboard" class="gs-section">
+  <section id="dashboard">
     <h2>Interactive Comparison Dashboard</h2>
     <div class="dash-wrap">
       <div class="dash-bar">
@@ -530,17 +529,18 @@
     </div>
   </section>
 
-  <!-- CITATION -->
-  <section class="gs-section">
+  <section>
     <h2>Citation</h2>
     <div class="cite-box"><span class="k">@unpublished</span>{<span class="v">wakil2026ramification</span>,
-  <span class="k">author</span> = {Wakil, Khayyam},
-  <span class="k">title</span>  = {The {Ramification Index}: {RAM} Prices, Oligopoly Cycles,
-            and the Downstream Consequences of Semiconductor Pricing
-            as an Economic Signal},
-  <span class="k">year</span>   = {2026},
-  <span class="k">month</span>  = apr,
-  <span class="k">note</span>   = {Working paper. \url{https://iamkhayyam.github.io/memory-index/}}
+  <span class="k">author</span>      = {Wakil, Khayyam},
+  <span class="k">title</span>       = {The {Ramification Index}: {RAM} Prices, Oligopoly Cycles,
+                and the Downstream Consequences of Semiconductor Pricing
+                as an Economic Signal},
+  <span class="k">institution</span> = {The ARC Institute of Knowware},
+  <span class="k">address</span>     = {Calgary, AB, Canada},
+  <span class="k">year</span>        = {2026},
+  <span class="k">month</span>       = apr,
+  <span class="k">note</span>        = {Working paper. \url{https://iamkhayyam.github.io/memory-index/}}
 }</div>
   </section>
 
@@ -548,8 +548,10 @@
 
 <footer>
   <p>
+    &copy; 2026 Khayyam Wakil &middot; The ARC Institute of Knowware &middot; Calgary, AB
+    &nbsp;&nbsp;|&nbsp;&nbsp;
     Data:&nbsp;
-    <a href="https://jcmit.net/memoryprice.htm">McCallum (1957–2026)</a> &middot;
+    <a href="https://jcmit.net/memoryprice.htm">McCallum</a> &middot;
     <a href="https://www.trendforce.com">TrendForce</a> &middot;
     <a href="https://www.nber.org/research/business-cycle-dating">NBER</a> &middot;
     <a href="https://fred.stlouisfed.org">FRED</a>
@@ -558,78 +560,41 @@
   </p>
 </footer>
 
-<!-- GSAP + ScrollTrigger -->
+<!-- GSAP: progressive enhancement only — all content visible via CSS above -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-  gsap.registerPlugin(ScrollTrigger);
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
 
-  /* ── Scroll progress bar ── */
-  gsap.to('#progress', {
-    scaleX: 1,
-    ease: 'none',
-    scrollTrigger: { scrub: 0.4, start: 'top top', end: 'bottom bottom' }
-  });
-
-  /* ── Hero entrance (staggered on load) ── */
-  const heroTl = gsap.timeline({ defaults: { ease: 'power2.out' } });
-  heroTl
-    .from('#gs-badge',   { opacity: 0, y: -14, duration: 0.55 })
-    .from('#gs-h1',      { opacity: 0, y: 22,  duration: 0.7  }, '-=0.3')
-    .from('#gs-sub',     { opacity: 0, y: 16,  duration: 0.6  }, '-=0.4')
-    .from('#gs-meta',    { opacity: 0,          duration: 0.5  }, '-=0.3')
-    .from('#gs-shields img', { opacity: 0, y: 8, duration: 0.4, stagger: 0.06 }, '-=0.2')
-    .from('.pill',       { opacity: 0, y: 10,  duration: 0.4,  stagger: 0.07  }, '-=0.25');
-
-  /* ── Section headings slide in ── */
-  gsap.utils.toArray('h2').forEach(el => {
-    gsap.from(el, {
-      scrollTrigger: { trigger: el, start: 'top 90%' },
-      opacity: 0, x: -10, duration: 0.45, ease: 'power2.out'
+    /* Scroll progress bar */
+    gsap.to('#progress', {
+      scaleX: 1,
+      ease: 'none',
+      scrollTrigger: { scrub: 0.4, start: 'top top', end: 'bottom bottom' }
     });
-  });
 
-  /* ── Abstract box ── */
-  gsap.from('.abstract-box', {
-    scrollTrigger: { trigger: '.abstract-box', start: 'top 88%' },
-    opacity: 0, y: 22, duration: 0.7, ease: 'power2.out'
-  });
+    /* Smart scroll reveal: only animate elements currently below the fold */
+    function revealOnScroll(selector, vars, stagger) {
+      const els = gsap.utils.toArray(selector).filter(el =>
+        el.getBoundingClientRect().top > window.innerHeight * 0.95
+      );
+      if (!els.length) return;
+      gsap.from(els, {
+        scrollTrigger: { trigger: els[0], start: 'top 88%', once: true },
+        ...vars,
+        stagger: stagger || 0
+      });
+    }
 
-  /* ── Stat cards stagger ── */
-  gsap.from('.stat-card', {
-    scrollTrigger: { trigger: '.stats', start: 'top 88%' },
-    opacity: 0, y: 20, duration: 0.5, ease: 'power2.out', stagger: 0.07
-  });
-
-  /* ── Table rows stagger ── */
-  gsap.from('tbody tr', {
-    scrollTrigger: { trigger: 'table', start: 'top 88%' },
-    opacity: 0, x: -8, duration: 0.38, ease: 'power2.out', stagger: 0.07
-  });
-
-  /* ── Triple cards stagger ── */
-  gsap.from('.triple-card', {
-    scrollTrigger: { trigger: '.triple-grid', start: 'top 88%' },
-    opacity: 0, y: 22, duration: 0.55, ease: 'power2.out', stagger: 0.1
-  });
-
-  /* ── Dashboard fade up ── */
-  gsap.from('.dash-wrap', {
-    scrollTrigger: { trigger: '.dash-wrap', start: 'top 88%' },
-    opacity: 0, y: 24, duration: 0.7, ease: 'power2.out'
-  });
-
-  /* ── Citation ── */
-  gsap.from('.cite-box', {
-    scrollTrigger: { trigger: '.cite-box', start: 'top 90%' },
-    opacity: 0, y: 14, duration: 0.6, ease: 'power2.out'
-  });
-
-  /* ── Footer ── */
-  gsap.from('footer', {
-    scrollTrigger: { trigger: 'footer', start: 'top 98%' },
-    opacity: 0, duration: 0.6, ease: 'power2.out'
-  });
+    revealOnScroll('.abstract-box', { opacity: 0, y: 22, duration: 0.7, ease: 'power2.out' });
+    revealOnScroll('.stat-card',   { opacity: 0, y: 20, duration: 0.5, ease: 'power2.out' }, 0.07);
+    revealOnScroll('h2',           { opacity: 0, x: -8, duration: 0.4, ease: 'power2.out' });
+    revealOnScroll('tbody tr',     { opacity: 0, x: -6, duration: 0.35, ease: 'power2.out' }, 0.06);
+    revealOnScroll('.triple-card', { opacity: 0, y: 22, duration: 0.55, ease: 'power2.out' }, 0.1);
+    revealOnScroll('.dash-wrap',   { opacity: 0, y: 24, duration: 0.7, ease: 'power2.out' });
+    revealOnScroll('.cite-box',    { opacity: 0, y: 14, duration: 0.6, ease: 'power2.out' });
+  }
 </script>
 
 </body>
