@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Ramification Index</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ram:    #ffb347;
+      --navy:   #0d1117;
+      --ink:    #1a1f2e;
+      --mid:    #2d3348;
+      --muted:  #8b9ab8;
+      --light:  #f4f6fb;
+      --white:  #ffffff;
+      --radius: 6px;
+      --max:    860px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--light);
+      color: var(--ink);
+      line-height: 1.65;
+    }
+
+    /* ── HERO ───────────────────────────────────────── */
+    header {
+      background: var(--navy);
+      color: var(--white);
+      padding: 4rem 1.5rem 3rem;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--ram);
+      color: var(--navy);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.25em 0.9em;
+      border-radius: 99px;
+      margin-bottom: 1.2rem;
+    }
+
+    header h1 {
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: 800;
+      line-height: 1.2;
+      max-width: var(--max);
+      margin: 0 auto 0.7rem;
+    }
+
+    header h1 em { color: var(--ram); font-style: normal; }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+      max-width: 660px;
+      margin: 0 auto 1.6rem;
+    }
+
+    .meta {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .meta a { color: var(--ram); text-decoration: none; }
+    .meta a:hover { text-decoration: underline; }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4em;
+      padding: 0.45em 1.1em;
+      border-radius: 99px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+    .pill:hover { opacity: 0.82; }
+    .pill-arxiv  { background: var(--ram);  color: var(--navy); }
+    .pill-nature { background: var(--mid);  color: var(--white); border: 1px solid #3d4560; }
+    .pill-github { background: var(--mid);  color: var(--white); border: 1px solid #3d4560; }
+    .pill-dash   { background: #1e2a4a;     color: var(--ram);   border: 1px solid var(--ram); }
+
+    /* ── MAIN LAYOUT ────────────────────────────────── */
+    main {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+    }
+
+    section { margin-top: 3rem; }
+
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ram);
+      margin-bottom: 1rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    p { margin-bottom: 0.9rem; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── ABSTRACT ───────────────────────────────────── */
+    .abstract-box {
+      background: var(--white);
+      border-left: 4px solid var(--ram);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.6rem;
+      font-size: 0.95rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    /* ── KEY NUMBERS ────────────────────────────────── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 1.2rem 1rem;
+      text-align: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+
+    .stat-num {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--ram);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* ── RECESSION TABLE ────────────────────────────── */
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      background: var(--white);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+
+    thead { background: var(--ink); color: var(--white); }
+    th, td { padding: 0.65rem 0.9rem; text-align: center; }
+    th:first-child, td:first-child { text-align: left; font-weight: 600; }
+    tbody tr:nth-child(even) { background: #f8f9fc; }
+    tbody tr:first-child { background: #fff8ee; }
+    tbody tr:first-child td { font-weight: 700; }
+
+    .s  { color: #16a34a; font-weight: 700; }
+    .ns { color: #92400e; }
+    .as { color: #dc2626; }
+    .na { color: #94a3b8; }
+
+    /* ── TRIPLE MEANING ─────────────────────────────── */
+    .triple-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .triple-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.2rem 1.4rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+
+    .triple-icon {
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .triple-card h3 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--ram);
+      margin-bottom: 0.4rem;
+    }
+
+    .triple-card p {
+      font-size: 0.84rem;
+      color: #4b5568;
+      margin: 0;
+    }
+
+    /* ── DASHBOARD SECTION ──────────────────────────── */
+    .dashboard-section {
+      background: var(--navy);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+    }
+
+    .dashboard-header {
+      padding: 1rem 1.4rem 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--mid);
+    }
+
+    .dashboard-header span {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .open-full {
+      font-size: 0.78rem;
+      color: var(--ram);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .open-full:hover { text-decoration: underline; }
+
+    iframe {
+      display: block;
+      width: 100%;
+      height: 2400px;
+      border: none;
+      background: var(--navy);
+    }
+
+    /* ── CITATION ───────────────────────────────────── */
+    .cite-box {
+      background: var(--ink);
+      color: #c9d6f0;
+      border-radius: var(--radius);
+      padding: 1.2rem 1.4rem;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.8rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    /* ── FOOTER ─────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      border-top: 1px solid #e2e8f0;
+    }
+
+    footer a { color: var(--ram); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="badge">Working Paper · April 2026</div>
+  <h1>The <em>Ramification</em> Index</h1>
+  <p class="subtitle">RAM Prices, Oligopoly Cycles, and the Downstream Consequences of Semiconductor Pricing as an Economic Signal</p>
+  <p class="meta">
+    Khayyam Wakil &nbsp;·&nbsp; Independent researcher &nbsp;·&nbsp;
+    <a href="mailto:theusual@gmail.com">theusual@gmail.com</a>
+  </p>
+  <div class="pill-row">
+    <a class="pill pill-arxiv"
+       href="https://github.com/iamkhayyam/memory-index/raw/main/paper-arxiv/The%20Ramification%20Index%20-%20arXiv%20Edition.pdf">
+      ↓ arXiv Edition (PDF)
+    </a>
+    <a class="pill pill-nature"
+       href="https://github.com/iamkhayyam/memory-index/raw/main/paper-nature/The%20Ramification%20Index%20-%20Nature%20Edition.pdf">
+      ↓ Journal Edition (PDF)
+    </a>
+    <a class="pill pill-github"
+       href="https://github.com/iamkhayyam/memory-index">
+      GitHub
+    </a>
+    <a class="pill pill-dash" href="#dashboard">
+      Live Dashboard ↓
+    </a>
+  </div>
+</header>
+
+<main>
+
+  <!-- ABSTRACT -->
+  <section>
+    <h2>Abstract</h2>
+    <div class="abstract-box">
+      <p>Informal economic indicators — the Lipstick Index, the Hemline Index, the Men's Underwear Index, and the Buttered Popcorn Index — have circulated in financial journalism for nearly a century as heuristic substitutes for orthodox recession signals. Each is built on consumer-demand folk psychology, and each has failed at least once in the past two decades.</p>
+      <p>We propose a new indicator built on the <strong>supply side</strong> of the world's most financialised commodity: dynamic random-access memory (DRAM). We call it the <strong>Ramification Index</strong> — a name with three simultaneous meanings: the underlying commodity (RAM), the economic ramifications of oligopoly pricing decisions cascading through the IT stack, and the algebraic ramification index e(𝔓|𝔭) from number theory, which measures precisely how a prime ideal branches through a field extension.</p>
+      <p>The index identifies all six NBER recessions since 1980, leads the cycle by a median of one to three quarters, and is not disrupted by pandemics, fashion cycles, or behavioural substitution. As AI capital expenditure concentrates global IT investment around memory bandwidth, DRAM pricing carries macroeconomic weight that no folk index can claim.</p>
+    </div>
+  </section>
+
+  <!-- KEY NUMBERS -->
+  <section>
+    <h2>Key Results</h2>
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-num">6/6</div>
+        <div class="stat-label">NBER recessions correctly signalled since 1980</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">1–3Q</div>
+        <div class="stat-label">Median lead over NBER recession peak</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">r = 0.41</div>
+        <div class="stat-label">Pearson correlation with real GDP growth</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">r = −0.52</div>
+        <div class="stat-label">Correlation with Δ unemployment (U-3)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">95%</div>
+        <div class="stat-label">DRAM market share held by 3 firms</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">1957</div>
+        <div class="stat-label">Earliest year of publicly archived price data</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECESSION SCORECARD -->
+  <section>
+    <h2>Recession Scorecard</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Index</th>
+            <th>1980–82</th>
+            <th>1990–91</th>
+            <th>2001</th>
+            <th>2008–09</th>
+            <th>2020</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Ramification Index</td>
+            <td class="s">S</td><td class="s">S</td><td class="s">S</td><td class="s">S</td><td class="s">S</td>
+            <td class="s">6 / 6</td>
+          </tr>
+          <tr>
+            <td>Buttered Popcorn</td>
+            <td class="s">S</td><td class="ns">NS</td><td class="s">S</td><td class="s">S</td><td class="as">AS</td>
+            <td>3 / 6</td>
+          </tr>
+          <tr>
+            <td>Hemline (lagged)</td>
+            <td class="s">S</td><td class="s">S</td><td class="ns">NS</td><td class="s">S</td><td class="ns">NS</td>
+            <td>3 / 6</td>
+          </tr>
+          <tr>
+            <td>Lipstick</td>
+            <td class="na">n/a</td><td class="na">n/a</td><td class="s">S</td><td class="as">AS</td><td class="as">AS</td>
+            <td>1 / 3</td>
+          </tr>
+          <tr>
+            <td>Men's Underwear</td>
+            <td class="na">n/a</td><td class="na">n/a</td><td class="na">n/a</td><td class="s">S</td><td class="as">AS</td>
+            <td>1 / 3</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:0.78rem;color:#64748b;margin-top:0.6rem;">
+      S = Signalled · NS = No signal · AS = Anti-signal · n/a = series unavailable for that period
+    </p>
+  </section>
+
+  <!-- WHY THE NAME -->
+  <section>
+    <h2>Why "Ramification"?</h2>
+    <div class="triple-grid">
+      <div class="triple-card">
+        <div class="triple-icon">💾</div>
+        <h3>RAM</h3>
+        <p>Dynamic random-access memory — the commodity whose average selling price forms the index. The abbreviation is the anchor.</p>
+      </div>
+      <div class="triple-card">
+        <div class="triple-icon">🌐</div>
+        <h3>Ramification (economic)</h3>
+        <p>A price decision by three firms in Seoul and Boise branches outward into server capex, AI infrastructure, consumer electronics, and ultimately GDP.</p>
+      </div>
+      <div class="triple-card">
+        <div class="triple-icon">∂</div>
+        <h3>Ramification index (algebraic)</h3>
+        <p>In number theory, e(𝔓|𝔭) measures how a prime ideal branches through a field extension. The metaphor is structurally precise, not decorative.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard">
+    <h2>Interactive Comparison Dashboard</h2>
+    <div class="dashboard-section">
+      <div class="dashboard-header">
+        <span>DRAM prices · Folk indices · NBER recessions · Live Pearson correlations · 1980–2026</span>
+        <a class="open-full" href="dashboard.html" target="_blank">Open full ↗</a>
+      </div>
+      <iframe src="dashboard.html" title="Ramification Index interactive dashboard" loading="lazy"></iframe>
+    </div>
+  </section>
+
+  <!-- CITATION -->
+  <section>
+    <h2>Citation</h2>
+    <div class="cite-box">@unpublished{wakil2026ramification,
+  author = {Wakil, Khayyam},
+  title  = {The {Ramification Index}: {RAM} Prices, Oligopoly Cycles,
+            and the Downstream Consequences of Semiconductor Pricing
+            as an Economic Signal},
+  year   = {2026},
+  month  = apr,
+  note   = {Working paper. Data: \url{https://github.com/iamkhayyam/memory-index}}
+}</div>
+  </section>
+
+</main>
+
+<footer>
+  <p>
+    Data: <a href="https://jcmit.net/memoryprice.htm">McCallum (1957–2026)</a> ·
+    <a href="https://www.trendforce.com">TrendForce</a> ·
+    <a href="https://www.nber.org/research/business-cycle-dating">NBER</a> ·
+    <a href="https://fred.stlouisfed.org">FRED</a>
+    &nbsp;|&nbsp;
+    <a href="https://github.com/iamkhayyam/memory-index">View on GitHub</a>
+  </p>
+</footer>
+
+</body>
+</html>
