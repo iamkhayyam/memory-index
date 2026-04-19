@@ -428,9 +428,11 @@
       padding: 0.8rem 0.1rem 0.4rem;
       font-size: 0.74rem; line-height: 1.7; color: var(--muted);
     }
-    .ts-seg { padding: 2px 0; transition: color 0.18s; }
+    .ts-seg { padding: 2px 0; transition: color 0.18s; cursor: pointer; }
+    .ts-seg:hover { opacity: 1 !important; color: var(--text); }
     .ts-seg.ts-past { opacity: 0.42; }
     .ts-seg.ts-active { color: var(--text); }
+    .ts-seg.ts-anchored::before { content: '·'; color: rgba(255,179,71,0.65); margin-right: 3px; vertical-align: middle; }
 
     /* ── CITATION ─────────────────────────────────── */
     .cite-box {
@@ -1017,14 +1019,65 @@ So the next time you look at your smartphone or you open your laptop or you read
 And it is quietly ticking away in the background, rammifying outward, signaling the future of the global economy.
 Keep your eyes on the basement valve, folks. Forget the lipstick. Thanks for joining us in the subbase. ment today. We will catch you on the next deep dive.`;
 
-  var segs = TRANSCRIPT.split('\n').filter(function (s) { return s.trim().length > 0; });
-  var cumWords = 0;
-  var wordCounts = segs.map(function (s) { return s.trim().split(/\s+/).length; });
-  var totalWords = wordCounts.reduce(function (a, b) { return a + b; }, 0);
-  var segFracs = [];
-  for (var i = 0; i < segs.length; i++) {
-    segFracs.push(cumWords / totalWords);
-    cumWords += wordCounts[i];
+  var segs = TRANSCRIPT.split('\n').filter(function(s) { return s.trim().length > 0; });
+
+  // Char-count weights with a floor (~55 chars ≈ pause budget for short utterances)
+  var segWeights = segs.map(function(s) { return Math.max(s.trim().length, 55); });
+  var totalWeight = segWeights.reduce(function(a, b) { return a + b; }, 0);
+
+  // Cumulative seg fractions [0..1)
+  var cumFracs = (function() {
+    var arr = [], cum = 0;
+    for (var i = 0; i < segs.length; i++) {
+      arr.push(cum / totalWeight);
+      cum += segWeights[i];
+    }
+    return arr;
+  })();
+
+  // Anchors: [{af: audioFrac, sf: segFrac}] — start+end always present
+  var anchors = [{ af: 0, sf: 0 }, { af: 1, sf: 1 }];
+
+  function addAnchor(af, segIdx) {
+    var sf = cumFracs[segIdx];
+    anchors = anchors.filter(function(a) {
+      return (a.af === 0 && a.sf === 0) || (a.af === 1 && a.sf === 1) ||
+             Math.abs(a.af - af) > 0.015;
+    });
+    anchors.push({ af: af, sf: sf });
+    anchors.sort(function(a, b) { return a.af - b.af; });
+  }
+
+  function afToSf(af) {
+    for (var i = 0; i < anchors.length - 1; i++) {
+      var lo = anchors[i], hi = anchors[i + 1];
+      if (lo.af <= af && hi.af >= af) {
+        var span = hi.af - lo.af;
+        var t = span === 0 ? 0 : (af - lo.af) / span;
+        return lo.sf + t * (hi.sf - lo.sf);
+      }
+    }
+    return af;
+  }
+
+  function sfToIdx(sf) {
+    for (var i = segs.length - 1; i >= 0; i--) {
+      if (cumFracs[i] <= sf) return i;
+    }
+    return 0;
+  }
+
+  function idxToAf(segIdx) {
+    var sf = cumFracs[segIdx];
+    for (var i = 0; i < anchors.length - 1; i++) {
+      var lo = anchors[i], hi = anchors[i + 1];
+      if (lo.sf <= sf && hi.sf >= sf) {
+        var span = hi.sf - lo.sf;
+        var t = span === 0 ? 0 : (sf - lo.sf) / span;
+        return lo.af + t * (hi.af - lo.af);
+      }
+    }
+    return sf;
   }
 
   var tBody = document.getElementById('transcriptBody');
@@ -1032,13 +1085,20 @@ Keep your eyes on the basement valve, folks. Forget the lipstick. Thanks for joi
 
   function buildTranscript() {
     tBody.innerHTML = '';
-    segs.forEach(function (seg, i) {
+    segs.forEach(function(seg, i) {
       var d = document.createElement('p');
       d.className = 'ts-seg';
       d.id = 'ts' + i;
       d.textContent = seg;
-      d.addEventListener('click', function () {
-        if (audio.duration) audio.currentTime = segFracs[i] * audio.duration;
+      d.title = 'Playing: click to sync here  |  Paused: click to seek';
+      d.addEventListener('click', function() {
+        if (!audio.paused && audio.duration) {
+          // Lock this line to the current playback position
+          addAnchor(audio.currentTime / audio.duration, i);
+          d.classList.add('ts-anchored');
+        } else if (audio.duration) {
+          audio.currentTime = idxToAf(i) * audio.duration;
+        }
       });
       tBody.appendChild(d);
     });
@@ -1046,35 +1106,26 @@ Keep your eyes on the basement valve, folks. Forget the lipstick. Thanks for joi
 
   function syncTranscript() {
     if (!audio.duration || segs.length === 0) return;
-    var frac = audio.currentTime / audio.duration;
-    var idx = 0;
-    for (var i = 0; i < segFracs.length; i++) {
-      if (segFracs[i] <= frac) idx = i;
-    }
+    var idx = sfToIdx(afToSf(audio.currentTime / audio.duration));
     if (idx === activeIdx) return;
     activeIdx = idx;
-    segs.forEach(function (_, i) {
-      var el = document.getElementById('ts' + i);
-      if (!el) return;
+    document.querySelectorAll('.ts-seg').forEach(function(el, i) {
       el.classList.toggle('ts-past',   i < idx);
       el.classList.toggle('ts-active', i === idx);
     });
     var active = document.getElementById('ts' + idx);
-    if (active) {
-      var top = active.offsetTop - tBody.offsetTop;
-      tBody.scrollTop = top - tBody.clientHeight / 3;
-    }
+    if (active) tBody.scrollTop = active.offsetTop - tBody.offsetTop - tBody.clientHeight / 3;
   }
 
   // ── Transcript toggle ─────────────────────────────────────────────────────
   var togBtn = document.getElementById('transcriptToggle');
   var panel  = document.getElementById('transcriptPanel');
-  togBtn.addEventListener('click', function () {
+  togBtn.addEventListener('click', function() {
     var open = panel.classList.toggle('open');
     togBtn.textContent = (open ? '▾' : '▸') + ' Transcript';
-    if (open && tBody.children.length === 0 && audio.duration) buildTranscript();
-    else if (open && tBody.children.length === 0) {
-      audio.addEventListener('loadedmetadata', buildTranscript, { once: true });
+    if (open && tBody.children.length === 0) {
+      if (audio.duration) buildTranscript();
+      else audio.addEventListener('loadedmetadata', buildTranscript, { once: true });
     }
   });
 
