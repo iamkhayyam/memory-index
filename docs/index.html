@@ -181,20 +181,28 @@
     strong { color: var(--white); font-weight: 700; }
 
     /* ── ABSTRACT ─────────────────────────────────── */
+    .abstract-rule {
+      border: none;
+      border-top: 1px solid rgba(255,179,71,0.45);
+      margin: 0;
+    }
+
     .abstract-box {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--ram);
-      border-radius: var(--radius);
-      padding: 1.4rem 1.6rem;
+      padding: 1.3rem 0;
       font-size: 0.91rem;
     }
 
-    /* ── STAT CARDS ───────────────────────────────── */
+    /* ── BENTO GRID ───────────────────────────────── */
     .stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
-      gap: 0.8rem;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.75rem;
+      /* grid-template-areas set by JS on each load */
+    }
+
+    @media (max-width: 640px) {
+      .stats { grid-template-columns: 1fr 1fr !important; }
+      .stat-card { grid-area: auto !important; }
     }
 
     .stat-card {
@@ -203,6 +211,11 @@
       border-radius: var(--radius);
       padding: 1.2rem 1rem;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 96px;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
     .stat-card:hover {
@@ -411,16 +424,18 @@
 
   <section>
     <h2>Abstract</h2>
+    <hr class="abstract-rule">
     <div class="abstract-box">
       <p>Informal economic indicators — the Lipstick Index, the Hemline Index, the Men's Underwear Index, and the Buttered Popcorn Index — have circulated in financial journalism for nearly a century as heuristic substitutes for orthodox recession signals. Each is built on consumer-demand folk psychology, and each has failed at least once in the past two decades.</p>
       <p>We propose a new indicator built on the <strong>supply side</strong> of the world's most financialised commodity: dynamic random-access memory (DRAM). We call it the <strong>Ramification Index</strong> — a name with three simultaneous meanings: the underlying commodity (RAM), the economic ramifications of oligopoly pricing decisions cascading through the IT stack, and the algebraic ramification index <em>e</em>(𝔓|𝔭) from number theory, which measures precisely how a prime ideal branches through a field extension.</p>
       <p>The index identifies all six NBER recessions since 1980, leads the cycle by a median of one to three quarters, and is not disrupted by pandemics, fashion cycles, or behavioural substitution. As AI capital expenditure concentrates global IT investment around memory bandwidth, DRAM pricing carries macroeconomic weight that no folk index can claim.</p>
     </div>
+    <hr class="abstract-rule">
   </section>
 
   <section>
     <h2>Key Results</h2>
-    <div class="stats">
+    <div class="stats" id="bento">
       <div class="stat-card"><div class="stat-num">6/6</div><div class="stat-label">NBER recessions correctly signalled since 1980</div></div>
       <div class="stat-card"><div class="stat-num">1–3Q</div><div class="stat-label">Median lead over NBER recession peak</div></div>
       <div class="stat-card"><div class="stat-num">r=0.41</div><div class="stat-label">Pearson correlation with real GDP growth</div></div>
@@ -540,6 +555,41 @@
     <a href="https://github.com/iamkhayyam/memory-index">GitHub</a>
   </p>
 </footer>
+
+<!-- Bento grid: random layout on every load -->
+<script>
+(function () {
+  // Six verified 6-col × 2-row grid-template-areas layouts
+  var layouts = [
+    '"a a b b c c" "d e e e f f"',   // varied widths, all single-row
+    '"a b b b c c" "a d d e f f"',   // a is tall left column
+    '"a a a b c c" "d d e e f f"',   // a dominates top-left
+    '"a a b c c d" "e e b f f d"',   // b and d are tall pillars
+    '"a b b b c d" "e e e f f d"',   // d is tall right pillar
+    '"a a a b b c" "d d e e f c"',   // c is tall right edge
+  ];
+
+  var areas = ['a','b','c','d','e','f'];
+
+  // Shuffle helper
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  var bento  = document.getElementById('bento');
+  var cards  = bento.querySelectorAll('.stat-card');
+  var layout = layouts[Math.floor(Math.random() * layouts.length)];
+  var slots  = shuffle(areas);  // shuffle which stat lands in which slot
+
+  bento.style.gridTemplateAreas = layout;
+  cards.forEach(function (card, i) { card.style.gridArea = slots[i]; });
+})();
+</script>
 
 <!-- GSAP: progressive enhancement only — all content visible via CSS above -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
