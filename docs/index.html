@@ -8,71 +8,84 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --ram:    #ffb347;
-      --navy:   #0d1117;
-      --ink:    #1a1f2e;
-      --mid:    #2d3348;
-      --muted:  #8b9ab8;
-      --light:  #f4f6fb;
-      --white:  #ffffff;
-      --radius: 6px;
-      --max:    860px;
+      --bg:      #0b0c10;
+      --panel:   #141620;
+      --panel2:  #1a1d28;
+      --border:  #20232d;
+      --border2: #2a2f3e;
+      --text:    #c9d3e8;   /* off-white / cream */
+      --muted:   #8a8f9b;
+      --white:   #ffffff;
+      --ram:     #ffb347;
+      --lipstick:#ff4d88;
+      --hemline: #9d7cff;
+      --mui:     #6ed3ff;
+      --popcorn: #e6e86b;
+      --green:   #4ade80;
+      --red:     #f87171;
+      --radius:  6px;
+      --max:     860px;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-      background: var(--light);
-      color: var(--ink);
+      background: var(--bg);
+      color: var(--text);
       line-height: 1.65;
+      font-size: 15px;
     }
 
-    /* ── HERO ───────────────────────────────────────── */
+    /* ── HERO ─────────────────────────────────────── */
     header {
-      background: var(--navy);
-      color: var(--white);
-      padding: 4rem 1.5rem 3rem;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      padding: 4rem 1.5rem 3.2rem;
       text-align: center;
     }
 
     .badge {
       display: inline-block;
-      background: var(--ram);
-      color: var(--navy);
-      font-size: 0.72rem;
+      background: transparent;
+      border: 1px solid var(--ram);
+      color: var(--ram);
+      font-size: 0.68rem;
       font-weight: 700;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      padding: 0.25em 0.9em;
+      padding: 0.28em 1em;
       border-radius: 99px;
-      margin-bottom: 1.2rem;
+      margin-bottom: 1.4rem;
     }
 
     header h1 {
-      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-size: clamp(1.7rem, 4.5vw, 2.8rem);
       font-weight: 800;
-      line-height: 1.2;
+      line-height: 1.15;
+      color: var(--white);
       max-width: var(--max);
-      margin: 0 auto 0.7rem;
+      margin: 0 auto 0.8rem;
+      letter-spacing: -0.01em;
     }
 
     header h1 em { color: var(--ram); font-style: normal; }
 
     .subtitle {
       color: var(--muted);
-      font-size: 0.95rem;
-      max-width: 660px;
-      margin: 0 auto 1.6rem;
+      font-size: 0.92rem;
+      max-width: 620px;
+      margin: 0 auto 1.8rem;
+      line-height: 1.6;
     }
 
     .meta {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--muted);
-      margin-bottom: 2rem;
+      margin-bottom: 2.2rem;
     }
 
-    .meta a { color: var(--ram); text-decoration: none; }
+    .meta a { color: var(--mui); text-decoration: none; }
     .meta a:hover { text-decoration: underline; }
 
     .pill-row {
@@ -86,226 +99,282 @@
       display: inline-flex;
       align-items: center;
       gap: 0.4em;
-      padding: 0.45em 1.1em;
+      padding: 0.5em 1.2em;
       border-radius: 99px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 600;
       text-decoration: none;
-      transition: opacity 0.15s;
+      border: 1px solid transparent;
+      transition: opacity 0.15s, border-color 0.15s;
     }
-    .pill:hover { opacity: 0.82; }
-    .pill-arxiv  { background: var(--ram);  color: var(--navy); }
-    .pill-nature { background: var(--mid);  color: var(--white); border: 1px solid #3d4560; }
-    .pill-github { background: var(--mid);  color: var(--white); border: 1px solid #3d4560; }
-    .pill-dash   { background: #1e2a4a;     color: var(--ram);   border: 1px solid var(--ram); }
+    .pill:hover { opacity: 0.8; }
 
-    /* ── MAIN LAYOUT ────────────────────────────────── */
+    .pill-arxiv  { background: var(--ram);    color: #0b0c10; }
+    .pill-nature { background: transparent;   color: var(--text); border-color: var(--border2); }
+    .pill-github { background: transparent;   color: var(--text); border-color: var(--border2); }
+    .pill-dash   { background: transparent;   color: var(--ram);  border-color: var(--ram); }
+
+    /* ── MAIN LAYOUT ──────────────────────────────── */
     main {
       max-width: var(--max);
       margin: 0 auto;
-      padding: 0 1.5rem 4rem;
+      padding: 0 1.5rem 5rem;
     }
 
-    section { margin-top: 3rem; }
+    section { margin-top: 3.2rem; }
 
     h2 {
-      font-size: 1.1rem;
+      font-size: 0.7rem;
       font-weight: 700;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--ram);
-      margin-bottom: 1rem;
-      padding-bottom: 0.4rem;
-      border-bottom: 2px solid #e2e8f0;
+      margin-bottom: 1.1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
     }
 
-    p { margin-bottom: 0.9rem; }
+    p { margin-bottom: 0.85rem; }
     p:last-child { margin-bottom: 0; }
 
-    /* ── ABSTRACT ───────────────────────────────────── */
+    /* ── ABSTRACT ─────────────────────────────────── */
     .abstract-box {
-      background: var(--white);
-      border-left: 4px solid var(--ram);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--ram);
       border-radius: var(--radius);
       padding: 1.4rem 1.6rem;
-      font-size: 0.95rem;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      font-size: 0.91rem;
+      color: var(--text);
     }
 
-    /* ── KEY NUMBERS ────────────────────────────────── */
+    strong { color: var(--white); font-weight: 700; }
+
+    /* ── KEY NUMBERS ──────────────────────────────── */
     .stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      gap: 0.8rem;
     }
 
     .stat-card {
-      background: var(--white);
+      background: var(--panel);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 1.2rem 1rem;
       text-align: center;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
     }
 
     .stat-num {
-      font-size: 2rem;
+      font-size: 1.85rem;
       font-weight: 800;
       color: var(--ram);
       line-height: 1;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.02em;
     }
 
     .stat-label {
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       color: var(--muted);
-      font-weight: 500;
+      line-height: 1.4;
     }
 
-    /* ── RECESSION TABLE ────────────────────────────── */
+    /* ── RECESSION TABLE ──────────────────────────── */
     .table-wrap { overflow-x: auto; }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.85rem;
-      background: var(--white);
+      font-size: 0.83rem;
+      background: var(--panel);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       overflow: hidden;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
     }
 
-    thead { background: var(--ink); color: var(--white); }
-    th, td { padding: 0.65rem 0.9rem; text-align: center; }
-    th:first-child, td:first-child { text-align: left; font-weight: 600; }
-    tbody tr:nth-child(even) { background: #f8f9fc; }
-    tbody tr:first-child { background: #fff8ee; }
-    tbody tr:first-child td { font-weight: 700; }
+    thead {
+      background: var(--panel2);
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
 
-    .s  { color: #16a34a; font-weight: 700; }
-    .ns { color: #92400e; }
-    .as { color: #dc2626; }
-    .na { color: #94a3b8; }
+    th, td {
+      padding: 0.7rem 0.9rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
 
-    /* ── TRIPLE MEANING ─────────────────────────────── */
+    th:first-child, td:first-child { text-align: left; }
+    tbody tr:last-child td { border-bottom: none; }
+
+    /* RAM row highlight */
+    tbody tr:first-child { background: rgba(255,179,71,0.06); }
+    tbody tr:first-child td:first-child { color: var(--ram); font-weight: 700; }
+
+    .s  { color: var(--green); font-weight: 700; }
+    .ns { color: var(--muted); }
+    .as { color: var(--red); }
+    .na { color: var(--border2); }
+
+    .score-best { color: var(--ram); font-weight: 800; }
+
+    /* ── TRIPLE MEANING ───────────────────────────── */
     .triple-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
+      gap: 0.8rem;
     }
 
     .triple-card {
-      background: var(--white);
+      background: var(--panel);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 1.2rem 1.2rem 1.4rem;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      padding: 1.3rem 1.3rem 1.5rem;
     }
 
     .triple-icon {
-      font-size: 1.6rem;
-      margin-bottom: 0.5rem;
+      font-size: 1.4rem;
+      margin-bottom: 0.6rem;
+      display: block;
     }
 
     .triple-card h3 {
-      font-size: 0.9rem;
+      font-size: 0.82rem;
       font-weight: 700;
-      color: var(--ram);
-      margin-bottom: 0.4rem;
+      color: var(--white);
+      margin-bottom: 0.45rem;
+      letter-spacing: 0.02em;
     }
 
     .triple-card p {
-      font-size: 0.84rem;
-      color: #4b5568;
+      font-size: 0.82rem;
+      color: var(--muted);
       margin: 0;
+      line-height: 1.55;
     }
 
-    /* ── DASHBOARD SECTION ──────────────────────────── */
-    .dashboard-section {
-      background: var(--navy);
+    /* ── DASHBOARD SECTION ────────────────────────── */
+    #dashboard { margin-top: 3.2rem; }
+
+    .dash-wrap {
+      background: var(--panel);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.18);
     }
 
-    .dashboard-header {
-      padding: 1rem 1.4rem 0.8rem;
+    .dash-bar {
+      padding: 0.75rem 1.1rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--mid);
+      border-bottom: 1px solid var(--border);
+      background: var(--panel2);
     }
 
-    .dashboard-header span {
-      font-size: 0.8rem;
+    .dash-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .dot { width: 9px; height: 9px; border-radius: 50%; }
+    .dot-ram  { background: var(--ram); }
+    .dot-lip  { background: var(--lipstick); }
+    .dot-hem  { background: var(--hemline); }
+    .dot-mui  { background: var(--mui); }
+    .dot-pop  { background: var(--popcorn); }
+
+    .dash-label {
+      font-size: 0.72rem;
       color: var(--muted);
+      letter-spacing: 0.05em;
     }
 
     .open-full {
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       color: var(--ram);
       text-decoration: none;
       font-weight: 600;
+      border: 1px solid rgba(255,179,71,0.35);
+      padding: 0.25em 0.75em;
+      border-radius: 99px;
+      transition: background 0.15s;
     }
-    .open-full:hover { text-decoration: underline; }
+    .open-full:hover { background: rgba(255,179,71,0.1); }
 
     iframe {
       display: block;
       width: 100%;
-      height: 2400px;
+      height: 2500px;
       border: none;
-      background: var(--navy);
+      background: var(--bg);
     }
 
-    /* ── CITATION ───────────────────────────────────── */
+    /* ── CITATION ─────────────────────────────────── */
     .cite-box {
-      background: var(--ink);
-      color: #c9d6f0;
+      background: var(--panel);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 1.2rem 1.4rem;
       font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-      font-size: 0.8rem;
-      line-height: 1.7;
+      font-size: 0.78rem;
+      line-height: 1.75;
+      color: var(--text);
       overflow-x: auto;
       white-space: pre;
     }
 
-    /* ── FOOTER ─────────────────────────────────────── */
+    .cite-box .k { color: var(--ram); }
+    .cite-box .v { color: var(--mui); }
+
+    /* ── FOOTER ───────────────────────────────────── */
     footer {
       text-align: center;
       padding: 2rem 1rem;
-      font-size: 0.8rem;
+      font-size: 0.76rem;
       color: var(--muted);
-      border-top: 1px solid #e2e8f0;
+      border-top: 1px solid var(--border);
     }
 
-    footer a { color: var(--ram); text-decoration: none; }
+    footer a { color: var(--mui); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
+
+    /* ── DIVIDER ──────────────────────────────────── */
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2rem 0 0;
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="badge">Working Paper · April 2026</div>
+  <div class="badge">Working Paper &middot; April 2026</div>
   <h1>The <em>Ramification</em> Index</h1>
   <p class="subtitle">RAM Prices, Oligopoly Cycles, and the Downstream Consequences of Semiconductor Pricing as an Economic Signal</p>
   <p class="meta">
-    Khayyam Wakil &nbsp;·&nbsp; Independent researcher &nbsp;·&nbsp;
+    Khayyam Wakil &nbsp;&middot;&nbsp; Independent researcher &nbsp;&middot;&nbsp;
     <a href="mailto:theusual@gmail.com">theusual@gmail.com</a>
   </p>
   <div class="pill-row">
     <a class="pill pill-arxiv"
        href="https://github.com/iamkhayyam/memory-index/raw/main/paper-arxiv/The%20Ramification%20Index%20-%20arXiv%20Edition.pdf">
-      ↓ arXiv Edition (PDF)
+      ↓&nbsp; arXiv Edition (PDF)
     </a>
     <a class="pill pill-nature"
        href="https://github.com/iamkhayyam/memory-index/raw/main/paper-nature/The%20Ramification%20Index%20-%20Nature%20Edition.pdf">
-      ↓ Journal Edition (PDF)
+      ↓&nbsp; Journal Edition (PDF)
     </a>
-    <a class="pill pill-github"
-       href="https://github.com/iamkhayyam/memory-index">
-      GitHub
+    <a class="pill pill-github" href="https://github.com/iamkhayyam/memory-index">
+      ⌥&nbsp; GitHub
     </a>
     <a class="pill pill-dash" href="#dashboard">
-      Live Dashboard ↓
+      Dashboard ↓
     </a>
   </div>
 </header>
@@ -317,7 +386,7 @@
     <h2>Abstract</h2>
     <div class="abstract-box">
       <p>Informal economic indicators — the Lipstick Index, the Hemline Index, the Men's Underwear Index, and the Buttered Popcorn Index — have circulated in financial journalism for nearly a century as heuristic substitutes for orthodox recession signals. Each is built on consumer-demand folk psychology, and each has failed at least once in the past two decades.</p>
-      <p>We propose a new indicator built on the <strong>supply side</strong> of the world's most financialised commodity: dynamic random-access memory (DRAM). We call it the <strong>Ramification Index</strong> — a name with three simultaneous meanings: the underlying commodity (RAM), the economic ramifications of oligopoly pricing decisions cascading through the IT stack, and the algebraic ramification index e(𝔓|𝔭) from number theory, which measures precisely how a prime ideal branches through a field extension.</p>
+      <p>We propose a new indicator built on the <strong>supply side</strong> of the world's most financialised commodity: dynamic random-access memory (DRAM). We call it the <strong>Ramification Index</strong> — a name with three simultaneous meanings: the underlying commodity (RAM), the economic ramifications of oligopoly pricing decisions cascading through the IT stack, and the algebraic ramification index <em>e</em>(𝔓|𝔭) from number theory, which measures precisely how a prime ideal branches through a field extension.</p>
       <p>The index identifies all six NBER recessions since 1980, leads the cycle by a median of one to three quarters, and is not disrupted by pandemics, fashion cycles, or behavioural substitution. As AI capital expenditure concentrates global IT investment around memory bandwidth, DRAM pricing carries macroeconomic weight that no folk index can claim.</p>
     </div>
   </section>
@@ -335,11 +404,11 @@
         <div class="stat-label">Median lead over NBER recession peak</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num">r = 0.41</div>
+        <div class="stat-num">r=0.41</div>
         <div class="stat-label">Pearson correlation with real GDP growth</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num">r = −0.52</div>
+        <div class="stat-num">r=−0.52</div>
         <div class="stat-label">Correlation with Δ unemployment (U-3)</div>
       </div>
       <div class="stat-card">
@@ -373,7 +442,7 @@
           <tr>
             <td>Ramification Index</td>
             <td class="s">S</td><td class="s">S</td><td class="s">S</td><td class="s">S</td><td class="s">S</td>
-            <td class="s">6 / 6</td>
+            <td class="score-best">6 / 6</td>
           </tr>
           <tr>
             <td>Buttered Popcorn</td>
@@ -398,8 +467,8 @@
         </tbody>
       </table>
     </div>
-    <p style="font-size:0.78rem;color:#64748b;margin-top:0.6rem;">
-      S = Signalled · NS = No signal · AS = Anti-signal · n/a = series unavailable for that period
+    <p style="font-size:0.73rem;color:var(--muted);margin-top:0.6rem;">
+      S = Signalled &nbsp;&middot;&nbsp; NS = No signal &nbsp;&middot;&nbsp; AS = Anti-signal &nbsp;&middot;&nbsp; n/a = series unavailable for that period
     </p>
   </section>
 
@@ -408,19 +477,19 @@
     <h2>Why "Ramification"?</h2>
     <div class="triple-grid">
       <div class="triple-card">
-        <div class="triple-icon">💾</div>
+        <span class="triple-icon">💾</span>
         <h3>RAM</h3>
         <p>Dynamic random-access memory — the commodity whose average selling price forms the index. The abbreviation is the anchor.</p>
       </div>
       <div class="triple-card">
-        <div class="triple-icon">🌐</div>
+        <span class="triple-icon">🌐</span>
         <h3>Ramification (economic)</h3>
         <p>A price decision by three firms in Seoul and Boise branches outward into server capex, AI infrastructure, consumer electronics, and ultimately GDP.</p>
       </div>
       <div class="triple-card">
-        <div class="triple-icon">∂</div>
+        <span class="triple-icon">∂</span>
         <h3>Ramification index (algebraic)</h3>
-        <p>In number theory, e(𝔓|𝔭) measures how a prime ideal branches through a field extension. The metaphor is structurally precise, not decorative.</p>
+        <p>In number theory, <em>e</em>(𝔓|𝔭) measures how a prime ideal branches through a field extension. The metaphor is structurally precise, not decorative.</p>
       </div>
     </div>
   </section>
@@ -428,10 +497,17 @@
   <!-- DASHBOARD -->
   <section id="dashboard">
     <h2>Interactive Comparison Dashboard</h2>
-    <div class="dashboard-section">
-      <div class="dashboard-header">
-        <span>DRAM prices · Folk indices · NBER recessions · Live Pearson correlations · 1980–2026</span>
-        <a class="open-full" href="dashboard.html" target="_blank">Open full ↗</a>
+    <div class="dash-wrap">
+      <div class="dash-bar">
+        <div class="dash-bar-left">
+          <div class="dot dot-ram"></div>
+          <div class="dot dot-lip"></div>
+          <div class="dot dot-hem"></div>
+          <div class="dot dot-mui"></div>
+          <div class="dot dot-pop"></div>
+          <span class="dash-label">&nbsp;RAM · Lipstick · Hemline · MUI · Popcorn &nbsp;·&nbsp; 1980–2026</span>
+        </div>
+        <a class="open-full" href="dashboard.html" target="_blank">open full ↗</a>
       </div>
       <iframe src="dashboard.html" title="Ramification Index interactive dashboard" loading="lazy"></iframe>
     </div>
@@ -440,14 +516,14 @@
   <!-- CITATION -->
   <section>
     <h2>Citation</h2>
-    <div class="cite-box">@unpublished{wakil2026ramification,
-  author = {Wakil, Khayyam},
-  title  = {The {Ramification Index}: {RAM} Prices, Oligopoly Cycles,
+    <div class="cite-box"><span class="k">@unpublished</span>{<span class="v">wakil2026ramification</span>,
+  <span class="k">author</span> = {Wakil, Khayyam},
+  <span class="k">title</span>  = {The {Ramification Index}: {RAM} Prices, Oligopoly Cycles,
             and the Downstream Consequences of Semiconductor Pricing
             as an Economic Signal},
-  year   = {2026},
-  month  = apr,
-  note   = {Working paper. Data: \url{https://github.com/iamkhayyam/memory-index}}
+  <span class="k">year</span>   = {2026},
+  <span class="k">month</span>  = apr,
+  <span class="k">note</span>   = {Working paper. \url{https://iamkhayyam.github.io/memory-index/}}
 }</div>
   </section>
 
@@ -455,12 +531,13 @@
 
 <footer>
   <p>
-    Data: <a href="https://jcmit.net/memoryprice.htm">McCallum (1957–2026)</a> ·
-    <a href="https://www.trendforce.com">TrendForce</a> ·
-    <a href="https://www.nber.org/research/business-cycle-dating">NBER</a> ·
+    Data:&nbsp;
+    <a href="https://jcmit.net/memoryprice.htm">McCallum (1957–2026)</a> &middot;
+    <a href="https://www.trendforce.com">TrendForce</a> &middot;
+    <a href="https://www.nber.org/research/business-cycle-dating">NBER</a> &middot;
     <a href="https://fred.stlouisfed.org">FRED</a>
-    &nbsp;|&nbsp;
-    <a href="https://github.com/iamkhayyam/memory-index">View on GitHub</a>
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="https://github.com/iamkhayyam/memory-index">GitHub</a>
   </p>
 </footer>
 
