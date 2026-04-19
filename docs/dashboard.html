@@ -125,6 +125,17 @@
   }
   a { color: #6ed3ff; }
   .pill { display:inline-block; padding: 2px 8px; border:1px solid var(--border); border-radius:999px; font-size:11px; color:var(--muted); }
+  /* Per-chart toggles — visible in embed mode only */
+  .chart-toggles { display:none; flex-wrap:wrap; gap:4px; margin-bottom:10px; }
+  body.embed .chart-toggles { display:flex; }
+  .ct-pill {
+    font-size: 11px; padding: 2px 10px; border-radius: 999px;
+    border: 1px solid var(--c, var(--border));
+    background: transparent; color: var(--c, var(--muted));
+    cursor: pointer; opacity: 0.32; transition: opacity 0.15s;
+    line-height: 1.6;
+  }
+  .ct-pill.on { opacity: 1; }
 </style>
 </head>
 <body>
@@ -161,6 +172,13 @@
   <div class="card">
     <h2>Indices, normalised (2001 = 100)</h2>
     <p>All five series on a common 2001=100 basis. Note how the RAM line breaks below 1 during every recession while the consumer indices wobble.</p>
+    <div class="chart-toggles">
+      <button class="ct-pill on" data-chart="norm" data-key="ram"      style="--c:var(--ram)">RAM</button>
+      <button class="ct-pill on" data-chart="norm" data-key="lipstick" style="--c:var(--lipstick)">Lipstick</button>
+      <button class="ct-pill on" data-chart="norm" data-key="hemline"  style="--c:var(--hemline)">Hemline</button>
+      <button class="ct-pill on" data-chart="norm" data-key="mui"      style="--c:var(--mui)">MUI</button>
+      <button class="ct-pill on" data-chart="norm" data-key="popcorn"  style="--c:var(--popcorn)">Popcorn</button>
+    </div>
     <canvas id="chartNormalized"></canvas>
   </div>
 
@@ -168,6 +186,13 @@
     <div class="card">
       <h2>Year-on-year % change</h2>
       <p>Annual percent change for each index. Negative values in shaded periods are the &ldquo;signal.&rdquo;</p>
+      <div class="chart-toggles">
+        <button class="ct-pill on" data-chart="yoy" data-key="ram"      style="--c:var(--ram)">RAM</button>
+        <button class="ct-pill on" data-chart="yoy" data-key="lipstick" style="--c:var(--lipstick)">Lipstick</button>
+        <button class="ct-pill on" data-chart="yoy" data-key="hemline"  style="--c:var(--hemline)">Hemline</button>
+        <button class="ct-pill on" data-chart="yoy" data-key="mui"      style="--c:var(--mui)">MUI</button>
+        <button class="ct-pill on" data-chart="yoy" data-key="popcorn"  style="--c:var(--popcorn)">Popcorn</button>
+      </div>
       <canvas id="chartYoy"></canvas>
     </div>
     <div class="card">
@@ -432,6 +457,23 @@ document.querySelectorAll('[data-series], #recessionToggle').forEach(el =>
   el.addEventListener('change', applyToggles)
 );
 updateCorrTable();
+
+// ---- Per-chart toggles (embed mode only) ----------------------------------
+const chartMap = { norm: chartNorm, yoy: chartYoy };
+document.querySelectorAll('.ct-pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const chart = chartMap[btn.dataset.chart];
+    const ds = chart.data.datasets.find(d => d._seriesKey === btn.dataset.key);
+    if (!ds) return;
+    ds.hidden = !ds.hidden;
+    btn.classList.toggle('on', !ds.hidden);
+    chart.update();
+  });
+});
+
+if (new URLSearchParams(location.search).has('embed')) {
+  document.body.classList.add('embed');
+}
 </script>
 
 </body>
