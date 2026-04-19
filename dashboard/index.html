@@ -297,23 +297,41 @@ function fmt(r) { return r == null ? '—' : (r >= 0 ? '+' : '') + r.toFixed(2);
 
 // ---- Recession shading as annotations -------------------------------------
 function recessionBands() {
-  const bands = [];
+  const annotations = [];
   let start = null;
   for (let i = 0; i < recFlag.length; i++) {
     if (recFlag[i] && start === null) start = years[i];
     if ((!recFlag[i] || i === recFlag.length - 1) && start !== null) {
       const end = recFlag[i] ? years[i] : years[i-1];
-      bands.push({
+      annotations.push({
         type: 'box',
         xMin: start - 0.5, xMax: end + 0.5,
-        backgroundColor: 'rgba(255,80,80,0.10)',
+        backgroundColor: 'rgba(255,70,70,0.07)',
         borderWidth: 0,
         drawTime: 'beforeDatasetsDraw',
+      });
+      annotations.push({
+        type: 'line',
+        xMin: start, xMax: start,
+        borderColor: 'rgba(255,90,70,0.55)',
+        borderWidth: 1.5,
+        borderDash: [4, 3],
+        label: {
+          display: true,
+          content: String(start),
+          color: '#ff7060',
+          font: { size: 10, weight: '600' },
+          position: 'start',
+          backgroundColor: 'rgba(11,12,16,0.82)',
+          padding: { x: 5, y: 2 },
+          borderRadius: 3,
+          yAdjust: 10,
+        },
       });
       start = null;
     }
   }
-  return bands;
+  return annotations;
 }
 
 const commonOpts = (yType='linear', yTitle='') => ({
@@ -341,7 +359,12 @@ const chartRam = new Chart(document.getElementById('chartRam'), {
       data: ramGB,
       borderColor: '#ffb347',
       backgroundColor: 'rgba(255,179,71,0.1)',
-      borderWidth: 2, pointRadius: 2, tension: 0.2,
+      borderWidth: 2, tension: 0.2,
+      pointStyle:           ramGB.map((v, i) => (recFlag[i] && v != null) ? 'star' : 'circle'),
+      pointRadius:          ramGB.map((v, i) => (recFlag[i] && v != null) ? 7 : 2),
+      pointBackgroundColor: ramGB.map((v, i) => (recFlag[i] && v != null) ? '#ff6050' : '#ffb347'),
+      pointBorderColor:     ramGB.map((v, i) => (recFlag[i] && v != null) ? 'rgba(255,96,80,0.4)' : 'transparent'),
+      pointBorderWidth:     ramGB.map((v, i) => (recFlag[i] && v != null) ? 2 : 0),
     }],
   },
   options: commonOpts('logarithmic', 'US $ per GB (log)'),
@@ -360,9 +383,14 @@ function makeDataset(label, data, color, hidden=false) {
     label, data,
     borderColor: color,
     backgroundColor: color + '22',
-    borderWidth: 2, pointRadius: 1.5, tension: 0.25,
+    borderWidth: 2, tension: 0.25,
     hidden,
-    _seriesKey: label.toLowerCase().split(' ')[0]
+    _seriesKey: label.toLowerCase().split(' ')[0],
+    pointStyle:           data.map((v, i) => (recFlag[i] && v != null) ? 'star' : 'circle'),
+    pointRadius:          data.map((v, i) => (recFlag[i] && v != null) ? 7 : 1.5),
+    pointBackgroundColor: data.map((v, i) => (recFlag[i] && v != null) ? '#ff6050' : color),
+    pointBorderColor:     data.map((v, i) => (recFlag[i] && v != null) ? 'rgba(255,96,80,0.4)' : 'transparent'),
+    pointBorderWidth:     data.map((v, i) => (recFlag[i] && v != null) ? 2 : 0),
   };
 }
 const chartNorm = new Chart(document.getElementById('chartNormalized'), {
@@ -424,6 +452,21 @@ function applyToggles() {
   const recOn = document.getElementById('recessionToggle').checked;
   for (const chart of [chartRam, chartNorm, chartYoy]) {
     chart.options.plugins.annotation.annotations = recOn ? recessionBands() : [];
+    chart.data.datasets.forEach(ds => {
+      if (recOn) {
+        ds.pointStyle           = ds.data.map((v, i) => (recFlag[i] && v != null) ? 'star' : 'circle');
+        ds.pointRadius          = ds.data.map((v, i) => (recFlag[i] && v != null) ? 7 : 1.5);
+        ds.pointBackgroundColor = ds.data.map((v, i) => (recFlag[i] && v != null) ? '#ff6050' : ds.borderColor);
+        ds.pointBorderColor     = ds.data.map((v, i) => (recFlag[i] && v != null) ? 'rgba(255,96,80,0.4)' : 'transparent');
+        ds.pointBorderWidth     = ds.data.map((v, i) => (recFlag[i] && v != null) ? 2 : 0);
+      } else {
+        ds.pointStyle = 'circle';
+        ds.pointRadius = 2;
+        ds.pointBackgroundColor = ds.borderColor;
+        ds.pointBorderColor = 'transparent';
+        ds.pointBorderWidth = 0;
+      }
+    });
     chart.update();
   }
   updateCorrTable();
