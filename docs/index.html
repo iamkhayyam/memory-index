@@ -356,6 +356,56 @@
       background: var(--bg);
     }
 
+    /* ── AUDIO PLAYER ─────────────────────────────── */
+    .audio-player {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.65rem 0.9rem;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-top: 1.1rem;
+    }
+    .ap-btn {
+      flex-shrink: 0;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,179,71,0.35);
+      background: rgba(255,179,71,0.08);
+      color: var(--ram);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      transition: background 0.15s;
+      line-height: 1;
+    }
+    .ap-btn:hover { background: rgba(255,179,71,0.18); }
+    .ap-track { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .ap-label { color: var(--muted); font-size: 0.7rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ap-bar-wrap {
+      height: 3px;
+      background: var(--border);
+      border-radius: 999px;
+      cursor: pointer;
+      position: relative;
+    }
+    .ap-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: var(--ram);
+      pointer-events: none;
+    }
+    .ap-time {
+      flex-shrink: 0;
+      font-size: 0.7rem;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      min-width: 76px;
+      text-align: right;
+    }
+
     /* ── CITATION ─────────────────────────────────── */
     .cite-box {
       background: var(--panel);
@@ -432,6 +482,15 @@
       <p>The index identifies all six NBER recessions since 1980, leads the cycle by a median of one to three quarters, and is not disrupted by pandemics, fashion cycles, or behavioural substitution. As AI capital expenditure concentrates global IT investment around memory bandwidth, DRAM pricing carries macroeconomic weight that no folk index can claim.</p>
     </div>
     <hr class="abstract-rule">
+    <div class="audio-player">
+      <button class="ap-btn" id="apPlayBtn" aria-label="Play">&#9654;</button>
+      <div class="ap-track">
+        <span class="ap-label">Podcast · Computer Memory Prices Predict Global Recessions</span>
+        <div class="ap-bar-wrap" id="apBarWrap"><div class="ap-bar" id="apBar"></div></div>
+      </div>
+      <span class="ap-time" id="apTime">0:00 / --:--</span>
+      <audio id="apAudio" src="podcast/Computer_memory_prices_predict_global_recessions.m4a" preload="metadata"></audio>
+    </div>
   </section>
 
   <section>
@@ -627,6 +686,39 @@
     revealOnScroll('.dash-wrap',   { opacity: 0, y: 24, duration: 0.7, ease: 'power2.out' });
     revealOnScroll('.cite-box',    { opacity: 0, y: 14, duration: 0.6, ease: 'power2.out' });
   }
+</script>
+
+<script>
+(function () {
+  const audio = document.getElementById('apAudio');
+  const btn   = document.getElementById('apPlayBtn');
+  const bar   = document.getElementById('apBar');
+  const wrap  = document.getElementById('apBarWrap');
+  const time  = document.getElementById('apTime');
+  function fmt(s) {
+    if (!isFinite(s)) return '--:--';
+    var m = Math.floor(s / 60), ss = Math.floor(s % 60);
+    return m + ':' + (ss < 10 ? '0' : '') + ss;
+  }
+  btn.addEventListener('click', function () {
+    if (audio.paused) { audio.play(); btn.innerHTML = '&#9646;&#9646;'; }
+    else              { audio.pause(); btn.innerHTML = '&#9654;'; }
+  });
+  audio.addEventListener('timeupdate', function () {
+    if (!audio.duration) return;
+    bar.style.width = (audio.currentTime / audio.duration * 100) + '%';
+    time.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
+  });
+  audio.addEventListener('loadedmetadata', function () {
+    time.textContent = '0:00 / ' + fmt(audio.duration);
+  });
+  audio.addEventListener('ended', function () { btn.innerHTML = '&#9654;'; });
+  wrap.addEventListener('click', function (e) {
+    if (!audio.duration) return;
+    var rect = wrap.getBoundingClientRect();
+    audio.currentTime = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)) * audio.duration;
+  });
+})();
 </script>
 
 </body>
